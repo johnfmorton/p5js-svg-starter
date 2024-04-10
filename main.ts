@@ -4,13 +4,18 @@ import './style.css'
 import p5 from 'p5'
 import init, { p5SVG } from 'p5.js-svg'
 
+import { random, seedPRNG, spline, pointsInPath } from '@georgedoescode/generative-utils'
+
 init(p5)
+
+
 
 // p5 sketch
 const sketch = (p: p5SVG) => {
   p.setup = () => {
     // Setup the canvas
-    p.createCanvas(1100 / 1.15, 850 / 1.15, p.SVG)
+    // SVG is sized to be a full 8 1/2 x 11 inch document when opened in InkScape
+    p.createCanvas(1056, 816, p.SVG)
   }
 
   p.draw = () => {
