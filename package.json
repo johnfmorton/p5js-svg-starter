@@ -1,0 +1,18 @@
+{
+  "name": "p5js-svg-starter",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0"
+  },
+  "dependencies": {
+    "p5": "^1.6.0",
+    "p5.js-svg": "^1.5.1"
+  }
+}
