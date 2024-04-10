@@ -12,10 +12,17 @@ init(p5)
 
 // p5 sketch
 const sketch = (p: p5SVG) => {
+
+  // SVG is sized to be a full 8 1/2 x 11 inch document when opened in InkScape
+  const width = 1056
+  const height = 816
+
   p.setup = () => {
     // Setup the canvas
-    // SVG is sized to be a full 8 1/2 x 11 inch document when opened in InkScape
-    p.createCanvas(1056, 816, p.SVG)
+    p.createCanvas(width, height, p.SVG)
+
+    // Don't loop the draw function
+    p.noLoop()
   }
 
   p.draw = () => {
@@ -25,15 +32,27 @@ const sketch = (p: p5SVG) => {
     // No fill color for all shapes
     p.noFill()
 
-    // Draw a circle
-    p.circle(p.width / 4, p.height / 4, 50)
+    // loop through the number of points we want to draw
+    let numPoints = 300
 
-    // Draw a rectangle
-    p.rect(p.width * 0.75 - 25, p.height * 0.75 - 25, 50, 50)
+    // create a random seed
+    // seedPRNG(1)
 
-    // Draw a line
+    // create a random path
+    const path = Array.from({ length: numPoints }, () => [random(0, width), random(0, height)])
 
-    p.line(p.width / 2 - 25, p.height / 2 - 25, p.width / 2 + 25, p.height / 2 + 25)
+    // create a line by looping over the path
+    p.beginShape()
+
+    path.forEach(([x, y]) => {
+      p.vertex(x, y)
+    })
+
+    p.endShape()
+
+    // console.log(points)
+    console.clear()
+    console.log('path', path)
   }
 
   // listen to #save-button click event
@@ -43,6 +62,13 @@ const sketch = (p: p5SVG) => {
 
     p.save(`sketch-${timestamp}.svg`)
   })
+
+  // listen to #regenerate-button click event
+  document.getElementById('regenerate-button')?.addEventListener('click', () => {
+    // redraw the canvas
+    p.redraw()
+  })
+
 }
 
 // Create a new p5 instance and attach the sketch

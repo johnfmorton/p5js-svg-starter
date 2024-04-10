@@ -10,10 +10,17 @@ init(p5)
 
 // p5 sketch
 const sketch = (p: p5SVG) => {
+
+  // SVG is sized to be a full 8 1/2 x 11 inch document when opened in InkScape
+  const width = 1056
+  const height = 816
+
   p.setup = () => {
     // Setup the canvas
-    // SVG is sized to be a full 8 1/2 x 11 inch document when opened in InkScape
-    p.createCanvas(1056, 816, p.SVG)
+    p.createCanvas(width, height, p.SVG)
+
+    // Don't loop the draw function
+    p.noLoop()
   }
 
   p.draw = () => {
