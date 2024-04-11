@@ -33,20 +33,31 @@ const sketch = (p: p5SVG) => {
     p.noFill()
 
     // loop through the number of points we want to draw
-    let numPoints = 300
+    let numPoints = 5
 
     // create a random seed
     // seedPRNG(1)
 
+    // inset the points by a value
+    const inset = 100
+
     // create a random path
-    const path = Array.from({ length: numPoints }, () => [random(0, width), random(0, height)])
+    const path = Array.from({ length: numPoints }, () => [random(0 + inset, width - inset ), random(0 + inset , height -  inset)])
 
     // create a line by looping over the path
     p.beginShape()
 
-    path.forEach(([x, y]) => {
-      p.vertex(x, y)
+    // start the shape
+     p.vertex(path[0][0], path[0][1])
+
+    const pathWithoutFirst = path.slice(1)
+
+    pathWithoutFirst.forEach(([x, y]) => {
+      p.curveVertex(x, y)
     })
+
+    // close the shape
+    p.vertex(path[0][0], path[0][1])
 
     p.endShape()
 
