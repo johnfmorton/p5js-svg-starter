@@ -8,10 +8,12 @@ import { createQtGrid, randomBias, randomSnap, random } from '@georgedoescode/ge
 
 init(p5)
 
-
+let pInstance;
 
 // p5 sketch
 const sketch = (p: p5SVG) => {
+  // Assign the sketch instance to the global variable
+  pInstance = p
 
   // SVG is sized to be a full 8 1/2 x 11 inch document when opened in InkScape
   const width = 1056
@@ -23,7 +25,8 @@ const sketch = (p: p5SVG) => {
 
   p.setup = () => {
     // Setup the canvas
-    p.createCanvas(width, height, p.SVG)
+    // p.createCanvas(width, height, p.SVG)
+    p.createCanvas(width, height)
 
     // Don't loop the draw function
     p.noLoop()
@@ -45,27 +48,26 @@ const sketch = (p: p5SVG) => {
       return {
         x: randomBias(0, width, focus.x, 1),
         y: randomBias(0, height, focus.y, 1),
-        width: 5,
-        height: 5
+        width: 15,
+        height: 15
       }
     })
 
-    const grid = createQtGrid({ width, height, points, gap: 0, maxQty: 6 });
+    const grid = createQtGrid({ width, height, points, gap: 0, maxQtObjects: 3, maxQtLevels: 100 })
 
     // loop through the grid.areas
 
     grid.areas.forEach(area => {
       // set the color for this loop
-      const color = p.random(colors)
+      const color1 = p.random(colors)
       // set the stroke color
-      p.stroke(color)
-      p.fill(color)
+      p.stroke(color1)
+      p.fill(color1)
 
       // draw the rect for the background
       p.rectMode(p.CORNER)
       // draw the ellipse
       p.rect(area.x, area.y, area.width, area.height)
-
 
       const centerX = area.x + area.width / 2
       const centerY = area.y + area.height / 2
@@ -75,37 +77,35 @@ const sketch = (p: p5SVG) => {
 
       p.translate(centerX, centerY)
       // pick a new fill color
-      let fillColor: Color
+      let color2: Color
       do {
-        fillColor = p.random(colors)
-      } while (fillColor === color) // Continue looping until the color is different
+        color2 = p.random(colors)
+      } while (color2 === color1) // Continue looping until the color is different
 
-      p.fill(fillColor)
-      p.stroke(fillColor)
+      p.fill(color2)
+      p.stroke(color2)
 
       // the area.height and area.width may not be the same
       // get the smaller of the two
       const minDimension = Math.min(area.width, area.height)
 
       // in the center of the rect, draw a circle
-      p.ellipse(0, 0, minDimension / 2, minDimension / 2)
+      p.ellipse(0, 0, minDimension / 1.1, minDimension / 1.1)
 
       // pick a new fill color
-      let fillColor2: Color
+      let color3: Color
       do {
-        fillColor2 = p.random(colors)
-      } while (fillColor2 === color || fillColor2 === fillColor) // Continue looping until the color is different
+        color3 = p.random(colors)
+      } while (color3 === color1 || color3 === color2) // Continue looping until the color is different
 
-      p.fill(fillColor2)
-      p.stroke(fillColor2)
+      p.fill(color3)
+      p.stroke(color3)
 
       p.rectMode(p.CENTER)
 
       // we will rotate the rect by a random amount
       // get a random angle between 0 and 2PI
       const angle = random(0, p.TWO_PI)
-
-
 
       p.rotate(angle)
 
@@ -115,28 +115,23 @@ const sketch = (p: p5SVG) => {
       // Pop matrix to restore previous transformation state
       p.pop()
       // reset the rotation
-      p.resetMatrix()
+      // p.resetMatrix()
     })
 
     console.clear()
-    console.log('grid', grid)
+    console.log('grid', grid.areas)
   }
-
-  // listen to #save-button click event
-  document.getElementById('save-button')?.addEventListener('click', () => {
-    // get a timestamp
-    const timestamp = new Date().getTime()
-
-    p.save(`sketch-${timestamp}.svg`)
-  })
-
-  // listen to #regenerate-button click event
-  document.getElementById('regenerate-button')?.addEventListener('click', () => {
-    // redraw the canvas
-    p.redraw()
-  })
-
 }
+
+document.getElementById('save-button')?.addEventListener('click', () => {
+  const timestamp = new Date().getTime()
+  pInstance.save(`sketch-${timestamp}.svg`)
+})
+
+document.getElementById('regenerate-button')?.addEventListener('click', () => {
+  pInstance.redraw()
+})
+
 
 // Create a new p5 instance and attach the sketch
 new p5(sketch, document.getElementById('sketch'))
