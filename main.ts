@@ -33,6 +33,9 @@ const sketch = (p: p5SVG) => {
   }
 
   p.draw = () => {
+    // clear the background
+    p.clear();
+
     // Set background color
     p.background(256)
 
@@ -48,8 +51,8 @@ const sketch = (p: p5SVG) => {
       return {
         x: randomBias(0, width, focus.x, 1),
         y: randomBias(0, height, focus.y, 1),
-        width: 15,
-        height: 15
+        width: 2,
+        height: 2
       }
     })
 
@@ -89,8 +92,12 @@ const sketch = (p: p5SVG) => {
       // get the smaller of the two
       const minDimension = Math.min(area.width, area.height)
 
+      const dimensionOffset = random(2, 2.5)
+
+
+
       // in the center of the rect, draw a circle
-      p.ellipse(0, 0, minDimension / 1.1, minDimension / 1.1)
+      p.ellipse(0, 0, minDimension / dimensionOffset, minDimension / dimensionOffset)
 
       // pick a new fill color
       let color3: Color
@@ -98,12 +105,11 @@ const sketch = (p: p5SVG) => {
         color3 = p.random(colors)
       } while (color3 === color1 || color3 === color2) // Continue looping until the color is different
 
-      p.fill(color3)
-      p.stroke(color3)
+      p.fill(color1)
+      p.stroke(color1)
 
       p.rectMode(p.CENTER)
 
-      // we will rotate the rect by a random amount
       // get a random angle between 0 and 2PI
       const angle = random(0, p.TWO_PI)
 
