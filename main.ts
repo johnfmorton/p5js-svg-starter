@@ -25,8 +25,8 @@ const sketch = (p: p5SVG) => {
 
   p.setup = () => {
     // Setup the canvas
-    // p.createCanvas(width, height, p.SVG)
-    p.createCanvas(width, height)
+    p.createCanvas(width, height, p.SVG)
+    // p.createCanvas(width, height)
 
     // Don't loop the draw function
     p.noLoop()
@@ -37,7 +37,7 @@ const sketch = (p: p5SVG) => {
     p.clear();
 
     // Set background color
-    p.background(256)
+    // p.background(256)
 
     // No fill color for all shapes
     p.noFill()
@@ -69,7 +69,7 @@ const sketch = (p: p5SVG) => {
 
       // draw the rect for the background
       p.rectMode(p.CORNER)
-      // draw the ellipse
+      // draw a rectabgle for the area. You may want to turn this off
       // p.rect(area.x, area.y, area.width, area.height)
 
       const centerX = area.x + area.width / 2
@@ -86,25 +86,37 @@ const sketch = (p: p5SVG) => {
       } while (color2 === color1) // Continue looping until the color is different
 
       // p.fill(color2)
-      p.stroke(color2)
+      // p.stroke(color2)
 
       // the area.height and area.width may not be the same
       // get the smaller of the two
       const minDimension = Math.min(area.width, area.height)
 
-      const dimensionOffset = random(2, 2.5)
+      const dimensionOffset = random(0.5, 2.75)
 
+      // get a random angle between 0 and 2PI
+      const angle1 = random(0, p.TWO_PI)
 
+      // get a randon number between 0 and 1
+      const randomNum = random(0, 1)
+      console.log('randomNum', randomNum)
 
-      // in the center of the rect, draw a circle
-      p.ellipse(0, 0, minDimension / dimensionOffset, minDimension / dimensionOffset)
+      if (randomNum > 0.95) {
+        // in the center of the rect, draw a circle
+        // p.ellipse(
+        //   random(1, 3),
+        //   random(1, 3),
+        //   minDimension / dimensionOffset - random(0, 20),
+        //   minDimension / dimensionOffset - random(0, 20)
+        // )
+      }
 
       // fillCircleRadial(0, 0, minDimension / dimensionOffset, 20, true)
       // fillCircleConcentric(0, 0, minDimension / dimensionOffset, 20, true)
-
-      jankyFillEllipse(0, 0, (minDimension / dimensionOffset)-5, (minDimension / dimensionOffset) -5, 3)
-
-
+      p.rotate(angle1)
+      if (randomNum < 0.95) {
+        jankyFillEllipse(0, 0, minDimension / dimensionOffset - 5, minDimension / dimensionOffset - 5, 3)
+      }
       // pick a new fill color
       let color3: Color
       do {
@@ -113,26 +125,22 @@ const sketch = (p: p5SVG) => {
 
       // p.fill(color1)
 
-
-
-
       p.stroke(color1)
 
       p.rectMode(p.CENTER)
 
       // get a random angle between 0 and 2PI
-      const angle = random(0, p.TWO_PI)
+      const angle2 = random(0, p.TWO_PI)
 
+      p.rotate(angle2)
 
+      if (randomNum > 0.95) {
+        // in the center of the rect, draw a circle
+        // p.rect(0, 0, minDimension / 3, minDimension / 3)
+      } else {
 
-      p.rotate(angle)
-
-      // in the center of the rect, draw a circle
-      // p.rect(0, 0, minDimension / 3, minDimension / 3)
-
-
-      // jankyFilledRect(0, 0, minDimension / 3, minDimension / 3, 3, true)
-
+        jankyFilledRect(0, 0, minDimension / 3, minDimension / 3, 3, true)
+      }
       // Pop matrix to restore previous transformation state
       p.pop()
       // reset the rotation
