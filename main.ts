@@ -1,4 +1,4 @@
-import './style.css'
+import './src/css/input.css'
 
 // Import p5 module
 import p5 from 'p5'
@@ -99,7 +99,7 @@ const sketch = (p: p5SVG) => {
 
       // get a randon number between 0 and 1
       const randomNum = random(0, 1)
-      console.log('randomNum', randomNum)
+      // console.log('randomNum', randomNum)
 
       if (randomNum > 0.95) {
         // in the center of the rect, draw a circle

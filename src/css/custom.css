@@ -90,3 +90,26 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.p5Canvas {
+  border: 1px solid #dadada;
+  border-radius: 3px;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+  background-color: rgb(255, 250, 245);
+  display: flex; /* or use display: grid; */
+  align-items: center;
+  justify-content: center;
+  width: 100% !important; /* Full width of the parent container */
+  height: auto !important; /* Height will scale accordingly */
+  max-width: 1056px; /* Optional max-width */
+}
+
+.p5Canvas svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.p5Canvas canvas {
+  max-width: 100%;
+  height: auto;
+}
