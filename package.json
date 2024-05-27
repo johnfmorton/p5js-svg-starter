@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@georgedoescode/generative-utils": "^1.0.38",
+    "lil-gui": "^0.19.2",
     "p5": "^1.6.0",
     "p5.js-svg": "^1.5.1"
   }
