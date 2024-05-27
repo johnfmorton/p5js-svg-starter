@@ -15,15 +15,15 @@ let pInstance
 const gui = new GUI().title('Sketch controls')
 const obj = {
   title: 'Pen Plotter Experiment', // string
-  num: 10, // number
-  bool: true, // boolean
-  color: '#ff0000', // color
-  range: 50, // range
-  text: 'Hello', // text
-  select: ['option1', 'option2', 'option3'], // select
-  radio: 'option1', // radio
+  // num: 10, // number
+  // bool: true, // boolean
+  // color: '#ff0000', // color
+  // range: 50, // range
+  // text: 'Hello', // text
+  // select: ['option1', 'option2', 'option3'], // select
+  // radio: 'option1', // radio
   drawRectLines: false , // checkbox
-  button: () => alert('Hello'), // button,
+  // button: () => alert('Hello'), // button,
   redraw: () => pInstance.redraw(),
   saveSvg: () => pInstance.save('sketch.svg'),
   resize: () => {pInstance.reset()},
@@ -31,19 +31,21 @@ const obj = {
   height: 816,
   lineSpacingForCircles: 3,
   lineSpacingForSquares: 3,
-  centerTheRect: true
+  centerTheRect: true,
+  chanceOfJanky: 0.5
 }
 
 // gui.add(document, 'title')
 
 
-gui.add(obj, 'num', 0, 100).step(1)
-gui.add(obj, 'bool')
-gui.add(obj, 'color')
-gui.add(obj, 'range', 0, 100)
-gui.add(obj, 'text')
-gui.add(obj, 'select')
-gui.add(obj, 'radio', ['option1', 'option2', 'option3'])
+// gui.add(obj, 'num', 0, 100).step(1)
+// gui.add(obj, 'bool')
+// gui.add(obj, 'color')
+// gui.add(obj, 'range', 0, 100)
+// gui.add(obj, 'text')
+// gui.add(obj, 'select')
+// gui.add(obj, 'radio', ['option1', 'option2', 'option3'])
+gui.add(obj, 'chanceOfJanky', 0, 1).name('Chance of janky').step(0.01)
 gui.add(obj, 'lineSpacingForCircles', 1, 10).name('Circles line spacing').step(1)
 gui.add(obj, 'lineSpacingForSquares', 1, 10).name('Squares line spacing').step(1)
 gui.add(obj, 'drawRectLines').name('Draw rect lines?')
@@ -181,8 +183,11 @@ const height = obj.height
       // fillCircleRadial(0, 0, minDimension / dimensionOffset, 20, true)
       // fillCircleConcentric(0, 0, minDimension / dimensionOffset, 20, true)
       p.rotate(angle1)
-      if (randomNum < 0.95) {
+      if (randomNum < obj.chanceOfJanky) {
         jankyFillEllipse(0, 0, minDimension / dimensionOffset - 5, minDimension / dimensionOffset - 5, obj.lineSpacingForCircles)
+      } else {
+        // non janky
+        fillEllipse(0, 0, minDimension / dimensionOffset - 5, minDimension / dimensionOffset - 5, obj.lineSpacingForCircles)
       }
       // pick a new fill color
       let color3: Color
@@ -201,9 +206,10 @@ const height = obj.height
 
       p.rotate(angle2)
 
-      if (randomNum > 0.95) {
+      if (randomNum > obj.chanceOfJanky) {
         // in the center of the rect, draw a circle
         // p.rect(0, 0, minDimension / 3, minDimension / 3)
+        filledRect(0, 0, minDimension / 3, minDimension / 3, obj.lineSpacingForSquares, obj.centerTheRect)
       } else {
         jankyFilledRect(0, 0, minDimension / 3, minDimension / 3, obj.lineSpacingForSquares, obj.centerTheRect)
       }
