@@ -12,6 +12,12 @@ init(p5)
 
 let pInstance
 
+// check URL params
+const urlParams = new URLSearchParams(window.location.search)
+
+
+
+
 const gui = new GUI().title('Sketch controls')
 const obj = {
   title: 'Pen Plotter Experiment', // string
@@ -35,6 +41,40 @@ const obj = {
   chanceOfJanky: 0.5
 }
 
+// for each URL param, set the value in the obj
+urlParams.forEach((value, key) => {
+  if (obj.hasOwnProperty(key)) {
+    // if the key is a function defined in the obj, exit
+    if (typeof obj[key] === 'function') {
+      return
+    }
+
+
+    // if key is a number, set the value as a number
+    if (!isNaN(Number(value))) {
+      obj[key] = Number(value)
+    } else if (value === 'true' || value === 'false') {
+      obj[key] = value === 'true'
+    } else {
+      obj[key] = value
+    }
+  }
+})
+
+function addUrlParam(key: string, value: string | number | boolean) {
+
+  // store existing params
+  const params = new URLSearchParams(window.location.search)
+  // set the new value
+  params.set(key, value as string)
+  window.history.pushState({}, '', `?${params}`) // set the new URL
+}
+
+// save all the params to the URL
+for (const key in obj) {
+  addUrlParam(key, obj[key])
+}
+
 // gui.add(document, 'title')
 
 
@@ -45,11 +85,11 @@ const obj = {
 // gui.add(obj, 'text')
 // gui.add(obj, 'select')
 // gui.add(obj, 'radio', ['option1', 'option2', 'option3'])
-gui.add(obj, 'chanceOfJanky', 0, 1).name('Chance of janky').step(0.01)
-gui.add(obj, 'lineSpacingForCircles', 1, 10).name('Circles line spacing').step(1)
-gui.add(obj, 'lineSpacingForSquares', 1, 10).name('Squares line spacing').step(1)
-gui.add(obj, 'drawRectLines').name('Draw rect lines?')
-gui.add(obj, 'centerTheRect').name('Center the rect?')
+gui.add(obj, 'chanceOfJanky', 0, 1).name('Chance of janky').step(0.01).onFinishChange(() => { addUrlParam('chanceOfJanky', obj.chanceOfJanky)})
+gui.add(obj, 'lineSpacingForCircles', 1, 10).name('Circles line spacing').step(1).onFinishChange(() => { addUrlParam('lineSpacingForCircles', obj.lineSpacingForCircles)})
+gui.add(obj, 'lineSpacingForSquares', 1, 10).name('Squares line spacing').step(1).onFinishChange(() => { addUrlParam('lineSpacingForSquares', obj.lineSpacingForSquares)})
+gui.add(obj, 'drawRectLines').name('Draw rect lines?').onFinishChange(() => { addUrlParam('drawRectLines', obj.drawRectLines)})
+gui.add(obj, 'centerTheRect').name('Center the rect?').onFinishChange(() => { addUrlParam('centerTheRect', obj.centerTheRect)})
 gui.add(obj, 'saveSvg').name('Save SVG')
 gui.add(obj, 'redraw').name('Redraw')
 const canvasOption = gui.addFolder('Canvas options')
@@ -58,6 +98,8 @@ canvasOption.add(obj, 'title')
 canvasOption.add(obj, 'width')
 canvasOption.add(obj, 'height')
 canvasOption.add(obj, 'resize').name('Reset Canvas')
+
+
 
 
 // p5 sketch
