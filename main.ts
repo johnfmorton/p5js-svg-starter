@@ -115,13 +115,7 @@ gui
 gui.add(obj, 'drawOvals').name('Draw ovals').onFinishChange(() => {
   addUrlParam('drawOvals', obj.drawOvals)
 })
-const seedWordInGui = gui
-  .add(obj, 'seedWord')
-  .name('Seed word')
-  .onFinishChange(() => {
-    seedPRNG(obj.seedWord)
-    addUrlParam('seedWord', obj.seedWord)
-  })
+
 gui.add(obj, 'redraw').name('Redraw')
 function randomSeed() {
   let randomSeed = Math.random().toString(36).substring(7)
@@ -135,6 +129,13 @@ function randomSeed() {
 
 // gui.add(obj, 'redrawWithNewSeed').name('New seed')
 gui.add({ randomSeed }, 'randomSeed').name('New seed')
+const seedWordInGui = gui
+  .add(obj, 'seedWord')
+  .name('Seed word')
+  .onFinishChange(() => {
+    seedPRNG(obj.seedWord)
+    addUrlParam('seedWord', obj.seedWord)
+  })
 gui.add(obj, 'saveSvg').name('Save SVG')
 
 const canvasOption = gui.addFolder('Canvas options')
