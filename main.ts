@@ -20,8 +20,7 @@ init(p5)
 
 let pInstance: p5SVG
 
-// check URL params
-const urlParams = new URLSearchParams(window.location.search)
+
 
 const gui = new GUI().title('Sketch controls')
 const obj = {
@@ -46,7 +45,11 @@ const obj = {
   seedWord: 'helloWorld'
 }
 
+// check URL params
+const urlParams = new URLSearchParams(window.location.search)
+
 // for each URL param, set the value in the obj
+// to restore the state of the sketch
 urlParams.forEach((value, key) => {
   if (obj.hasOwnProperty(key)) {
     // if the key is a function defined in the obj, exit
@@ -54,9 +57,10 @@ urlParams.forEach((value, key) => {
       console.error(`Key ${key} is a function in the obj`)
       return
     }
-
     // if key is a number, set the value as a number
     if (!isNaN(Number(value))) {
+      // debugger;
+
       obj[key] = Number(value)
     } else if (value === 'true' || value === 'false') {
       obj[key] = value === 'true'
@@ -69,48 +73,56 @@ urlParams.forEach((value, key) => {
 function addUrlParam(key: string, value: string | number | boolean) {
   // store existing params
   const params = new URLSearchParams(window.location.search)
+  // don't store functions
+  if (typeof obj[key] === 'function') {
+    console.error(`Key ${key} is a function in the obj`)
+    return
+  }
   // set the new value
   params.set(key, value as string)
+  console.log('addUrlParam', params.toString())
+
   window.history.pushState({}, '', `?${params}`) // set the new URL
 }
 
-// save all the params to the URL
+// save all the obj params to the URL except functions
 for (const key in obj) {
   addUrlParam(key, obj[key])
 }
+
 gui.add(obj, 'about').name('About this sketch')
 gui
   .add(obj, 'chanceOfJanky', 0, 1)
   .name('Chance of janky')
   .step(0.01)
   .onFinishChange(() => {
-    addUrlParam('chanceOfJanky', obj.chanceOfJanky)
+    //addUrlParam('chanceOfJanky', obj.chanceOfJanky)
   })
 gui
   .add(obj, 'lineSpacingForCircles', 1, 10)
   .name('Circles line spacing')
   .step(1)
   .onFinishChange(() => {
-    addUrlParam('lineSpacingForCircles', obj.lineSpacingForCircles)
+    //addUrlParam('lineSpacingForCircles', obj.lineSpacingForCircles)
   })
 gui
   .add(obj, 'lineSpacingForSquares', 1, 10)
   .name('Squares line spacing')
   .step(1)
   .onFinishChange(() => {
-    addUrlParam('lineSpacingForSquares', obj.lineSpacingForSquares)
+    //addUrlParam('lineSpacingForSquares', obj.lineSpacingForSquares)
   })
 gui
   .add(obj, 'drawRectLines')
   .name('Draw the grid?')
   .onFinishChange(() => {
-    addUrlParam('drawRectLines', obj.drawRectLines)
+    //addUrlParam('drawRectLines', obj.drawRectLines)
   })
 gui
   .add(obj, 'centerTheRect')
   .name('Center the rectabgles?')
   .onFinishChange(() => {
-    addUrlParam('centerTheRect', obj.centerTheRect)
+    //addUrlParam('centerTheRect', obj.centerTheRect)
   })
 gui.add(obj, 'drawOvals').name('Draw ovals').onFinishChange(() => {
   addUrlParam('drawOvals', obj.drawOvals)
