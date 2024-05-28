@@ -8,7 +8,7 @@ import GUI from 'lil-gui'
 import { createQtGrid, randomBias, randomSnap, random } from '@georgedoescode/generative-utils'
 
 import { dialogController } from './src/dialog'
-import test from 'node:test'
+import { sanitizeFilename } from './src/utils'
 
 // Initialize dialog controller
 dialogController.init({
@@ -20,8 +20,6 @@ init(p5)
 
 let pInstance: p5SVG
 
-let myObj: object;
-
 // check URL params
 const urlParams = new URLSearchParams(window.location.search)
 
@@ -30,7 +28,11 @@ const obj = {
   title: 'Pen Plotter Experiment', // string
   drawRectLines: false, // checkbox
   redraw: () => pInstance.redraw(),
-  saveSvg: () => pInstance.save(`${obj.title}.svg`),
+  saveSvg: () => {
+    const timestamp = new Date().getTime()
+    pInstance.save(`${sanitizeFilename(obj.title)}_${timestamp}.svg`)
+   }
+  ,
   resize: () => {
     pInstance.resizeCanvas(obj.width, obj.height)
   },
@@ -125,8 +127,6 @@ canvasOption.add(obj, 'resize').name('Reset Canvas')
 const sketch = (p: p5SVG) => {
   // Assign the sketch instance to the global variable
   pInstance = p
-
-
 
   // SVG is sized to be a full 8 1/2 x 11 inch document when opened in InkScape
 
