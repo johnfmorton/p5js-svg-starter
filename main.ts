@@ -26,7 +26,10 @@ const gui = new GUI().title('Sketch controls')
 const obj = {
   title: 'Pen Plotter Experiment', // string
   drawRectLines: false, // checkbox
-  redraw: () => pInstance.redraw(),
+  redraw: () => {
+    setPageTitle(obj.title)
+    pInstance.redraw()
+  },
   saveSvg: () => {
     const timestamp = new Date().getTime()
     pInstance.save(`${sanitizeFilename(obj.title)}_${timestamp}.svg`)
@@ -152,7 +155,10 @@ gui.add(obj, 'saveSvg').name('Save SVG')
 
 const canvasOption = gui.addFolder('Canvas options')
 canvasOption.close()
-canvasOption.add(obj, 'title')
+canvasOption.add(obj, 'title').onFinishChange(() => {
+  setPageTitle(obj.title)
+  addUrlParam('title', obj.title)
+})
 canvasOption.add(obj, 'width')
 canvasOption.add(obj, 'height')
 canvasOption.add(obj, 'resize').name('Reset Canvas')
