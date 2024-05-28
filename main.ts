@@ -36,16 +36,14 @@ const obj = {
   resize: () => {
     pInstance.resizeCanvas(obj.width, obj.height)
   },
-  test: () => {
-    console.log('test')
-  },
   about: () => dialogController.open(),
   width: 1056,
   height: 816,
   lineSpacingForCircles: 3,
   lineSpacingForSquares: 3,
   centerTheRect: true,
-  chanceOfJanky: 0.5
+  chanceOfJanky: 0.5,
+  drawOvals: false
 }
 
 // for each URL param, set the value in the obj
@@ -79,6 +77,7 @@ function addUrlParam(key: string, value: string | number | boolean) {
 for (const key in obj) {
   addUrlParam(key, obj[key])
 }
+gui.add(obj, 'about').name('About this sketch')
 gui
   .add(obj, 'chanceOfJanky', 0, 1)
   .name('Chance of janky')
@@ -102,20 +101,20 @@ gui
   })
 gui
   .add(obj, 'drawRectLines')
-  .name('Draw rect lines?')
+  .name('Draw the grid?')
   .onFinishChange(() => {
     addUrlParam('drawRectLines', obj.drawRectLines)
   })
 gui
   .add(obj, 'centerTheRect')
-  .name('Center the rect?')
+  .name('Center the rectabgles?')
   .onFinishChange(() => {
     addUrlParam('centerTheRect', obj.centerTheRect)
   })
+gui.add(obj, 'drawOvals').name('Draw ovals')
+  gui.add(obj, 'redraw').name('Redraw')
 gui.add(obj, 'saveSvg').name('Save SVG')
-gui.add(obj, 'redraw').name('Redraw')
-gui.add(obj, 'about').name('About')
-gui.add(obj, 'test').name('Test')
+
 const canvasOption = gui.addFolder('Canvas options')
 canvasOption.close()
 canvasOption.add(obj, 'title')
@@ -177,7 +176,7 @@ const sketch = (p: p5SVG) => {
 
     // loop through the grid.areas
 
-    grid.areas.forEach((area: { x: number; y: number; width: number; height: number | undefined }) => {
+    grid.areas.forEach((area: { x: number; y: number; width: number; height: number }) => {
       // set the color for this loop
       const color1 = p.random(colors)
       // set the stroke color
@@ -220,15 +219,23 @@ const sketch = (p: p5SVG) => {
       const randomNum = random(0, 1)
       // console.log('randomNum', randomNum)
 
-      if (randomNum > 0.95) {
+      // if (randomNum > 0.95) {
         // in the center of the rect, draw a circle
-        // p.ellipse(
-        //   random(1, 3),
-        //   random(1, 3),
-        //   minDimension / dimensionOffset - random(0, 20),
-        //   minDimension / dimensionOffset - random(0, 20)
-        // )
-      }
+      if (obj.drawOvals) {
+
+        if (randomNum > obj.chanceOfJanky) {
+          p.ellipse(0, 0, minDimension / dimensionOffset, minDimension / dimensionOffset)
+        } else {
+          p.ellipse(
+            random(1, 3),
+            random(1, 3),
+            minDimension / dimensionOffset - random(0, 20),
+            minDimension / dimensionOffset - random(0, 20)
+          )
+        }
+        }
+
+      // }
 
       // fillCircleRadial(0, 0, minDimension / dimensionOffset, 20, true)
       // fillCircleConcentric(0, 0, minDimension / dimensionOffset, 20, true)
