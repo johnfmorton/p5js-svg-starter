@@ -3,10 +3,16 @@ import './src/css/input.css'
 // Import p5 module
 import p5 from 'p5'
 import init, { p5SVG } from 'p5.js-svg'
-
 import GUI from 'lil-gui'
-
 import { createQtGrid, randomBias, randomSnap, random } from '@georgedoescode/generative-utils'
+
+import { dialogController } from './src/dialog'
+
+// Initialize dialog controller
+dialogController.init({
+  dialogId: 'about-dialog',
+  closeBtId: 'close-dialog'
+})
 
 init(p5)
 
@@ -15,24 +21,16 @@ let pInstance
 // check URL params
 const urlParams = new URLSearchParams(window.location.search)
 
-
-
-
 const gui = new GUI().title('Sketch controls')
 const obj = {
   title: 'Pen Plotter Experiment', // string
-  // num: 10, // number
-  // bool: true, // boolean
-  // color: '#ff0000', // color
-  // range: 50, // range
-  // text: 'Hello', // text
-  // select: ['option1', 'option2', 'option3'], // select
-  // radio: 'option1', // radio
-  drawRectLines: false , // checkbox
-  // button: () => alert('Hello'), // button,
+  drawRectLines: false, // checkbox
   redraw: () => pInstance.redraw(),
   saveSvg: () => pInstance.save('sketch.svg'),
-  resize: () => {pInstance.reset()},
+  resize: () => {
+    pInstance.reset()
+  },
+  about: () => dialogController.open(),
   width: 1056,
   height: 816,
   lineSpacingForCircles: 3,
@@ -49,7 +47,6 @@ urlParams.forEach((value, key) => {
       return
     }
 
-
     // if key is a number, set the value as a number
     if (!isNaN(Number(value))) {
       obj[key] = Number(value)
@@ -62,7 +59,6 @@ urlParams.forEach((value, key) => {
 })
 
 function addUrlParam(key: string, value: string | number | boolean) {
-
   // store existing params
   const params = new URLSearchParams(window.location.search)
   // set the new value
@@ -74,24 +70,42 @@ function addUrlParam(key: string, value: string | number | boolean) {
 for (const key in obj) {
   addUrlParam(key, obj[key])
 }
-
-// gui.add(document, 'title')
-
-
-// gui.add(obj, 'num', 0, 100).step(1)
-// gui.add(obj, 'bool')
-// gui.add(obj, 'color')
-// gui.add(obj, 'range', 0, 100)
-// gui.add(obj, 'text')
-// gui.add(obj, 'select')
-// gui.add(obj, 'radio', ['option1', 'option2', 'option3'])
-gui.add(obj, 'chanceOfJanky', 0, 1).name('Chance of janky').step(0.01).onFinishChange(() => { addUrlParam('chanceOfJanky', obj.chanceOfJanky)})
-gui.add(obj, 'lineSpacingForCircles', 1, 10).name('Circles line spacing').step(1).onFinishChange(() => { addUrlParam('lineSpacingForCircles', obj.lineSpacingForCircles)})
-gui.add(obj, 'lineSpacingForSquares', 1, 10).name('Squares line spacing').step(1).onFinishChange(() => { addUrlParam('lineSpacingForSquares', obj.lineSpacingForSquares)})
-gui.add(obj, 'drawRectLines').name('Draw rect lines?').onFinishChange(() => { addUrlParam('drawRectLines', obj.drawRectLines)})
-gui.add(obj, 'centerTheRect').name('Center the rect?').onFinishChange(() => { addUrlParam('centerTheRect', obj.centerTheRect)})
+gui
+  .add(obj, 'chanceOfJanky', 0, 1)
+  .name('Chance of janky')
+  .step(0.01)
+  .onFinishChange(() => {
+    addUrlParam('chanceOfJanky', obj.chanceOfJanky)
+  })
+gui
+  .add(obj, 'lineSpacingForCircles', 1, 10)
+  .name('Circles line spacing')
+  .step(1)
+  .onFinishChange(() => {
+    addUrlParam('lineSpacingForCircles', obj.lineSpacingForCircles)
+  })
+gui
+  .add(obj, 'lineSpacingForSquares', 1, 10)
+  .name('Squares line spacing')
+  .step(1)
+  .onFinishChange(() => {
+    addUrlParam('lineSpacingForSquares', obj.lineSpacingForSquares)
+  })
+gui
+  .add(obj, 'drawRectLines')
+  .name('Draw rect lines?')
+  .onFinishChange(() => {
+    addUrlParam('drawRectLines', obj.drawRectLines)
+  })
+gui
+  .add(obj, 'centerTheRect')
+  .name('Center the rect?')
+  .onFinishChange(() => {
+    addUrlParam('centerTheRect', obj.centerTheRect)
+  })
 gui.add(obj, 'saveSvg').name('Save SVG')
 gui.add(obj, 'redraw').name('Redraw')
+gui.add(obj, 'about').name('About')
 const canvasOption = gui.addFolder('Canvas options')
 canvasOption.close()
 canvasOption.add(obj, 'title')
@@ -99,22 +113,15 @@ canvasOption.add(obj, 'width')
 canvasOption.add(obj, 'height')
 canvasOption.add(obj, 'resize').name('Reset Canvas')
 
-
-
-
 // p5 sketch
 const sketch = (p: p5SVG) => {
-
-
   // Assign the sketch instance to the global variable
   pInstance = p
 
   // SVG is sized to be a full 8 1/2 x 11 inch document when opened in InkScape
-  // const width = obj.width
-  // const height = obj.height
 
-  const getWidth = () => obj.width;
-  const getHeight = () => obj.height;
+  const getWidth = () => obj.width
+  const getHeight = () => obj.height
 
   // const colors: string[] = ['#7257fa', '#ffd53d', '#1D1934', '#F25C54']
   const colors: string[] = ['#00C5F0', '#96F000', '#BC00F0', '#F07000', '#84349B', '#386670']
@@ -125,8 +132,6 @@ const sketch = (p: p5SVG) => {
   p.setup = () => {
     // Setup the canvas
     p.createCanvas(getWidth(), getHeight(), p.SVG)
-    // p.createCanvas(width, height)
-
     // Don't loop the draw function
     p.noLoop()
   }
@@ -162,8 +167,8 @@ const sketch = (p: p5SVG) => {
       }
     })
 
-const width = obj.width
-const height = obj.height
+    const width = obj.width
+    const height = obj.height
 
     let grid = createQtGrid({ width, height, points, gap: 0, maxQtObjects: 3, maxQtLevels: 100 })
 
@@ -226,10 +231,22 @@ const height = obj.height
       // fillCircleConcentric(0, 0, minDimension / dimensionOffset, 20, true)
       p.rotate(angle1)
       if (randomNum < obj.chanceOfJanky) {
-        jankyFillEllipse(0, 0, minDimension / dimensionOffset - 5, minDimension / dimensionOffset - 5, obj.lineSpacingForCircles)
+        jankyFillEllipse(
+          0,
+          0,
+          minDimension / dimensionOffset - 5,
+          minDimension / dimensionOffset - 5,
+          obj.lineSpacingForCircles
+        )
       } else {
         // non janky
-        fillEllipse(0, 0, minDimension / dimensionOffset - 5, minDimension / dimensionOffset - 5, obj.lineSpacingForCircles)
+        fillEllipse(
+          0,
+          0,
+          minDimension / dimensionOffset - 5,
+          minDimension / dimensionOffset - 5,
+          obj.lineSpacingForCircles
+        )
       }
       // pick a new fill color
       let color3: Color
@@ -265,7 +282,6 @@ const height = obj.height
     console.log('grid', grid.areas)
   }
 }
-
 
 // fill rect
 function filledRect(x, y, w, h, lineSpacing, centerFill = true) {
