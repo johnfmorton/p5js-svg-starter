@@ -5,7 +5,7 @@ import p5 from 'p5'
 import init, { p5SVG } from 'p5.js-svg'
 
 import GUI from 'lil-gui'
-import { createQtGrid, randomBias, randomSnap, random } from '@georgedoescode/generative-utils'
+import { createQtGrid, randomBias, randomSnap, random, seedPRNG } from '@georgedoescode/generative-utils'
 
 import { dialogController } from './src/dialog'
 import { sanitizeFilename } from './src/utils'
@@ -31,8 +31,7 @@ const obj = {
   saveSvg: () => {
     const timestamp = new Date().getTime()
     pInstance.save(`${sanitizeFilename(obj.title)}_${timestamp}.svg`)
-   }
-  ,
+  },
   resize: () => {
     pInstance.resizeCanvas(obj.width, obj.height)
   },
@@ -43,7 +42,8 @@ const obj = {
   lineSpacingForSquares: 3,
   centerTheRect: true,
   chanceOfJanky: 0.5,
-  drawOvals: false
+  drawOvals: false,
+  seedWord: 'helloWorld'
 }
 
 // for each URL param, set the value in the obj
@@ -51,6 +51,7 @@ urlParams.forEach((value, key) => {
   if (obj.hasOwnProperty(key)) {
     // if the key is a function defined in the obj, exit
     if (typeof obj[key] === 'function') {
+      console.error(`Key ${key} is a function in the obj`)
       return
     }
 
@@ -111,8 +112,29 @@ gui
   .onFinishChange(() => {
     addUrlParam('centerTheRect', obj.centerTheRect)
   })
-gui.add(obj, 'drawOvals').name('Draw ovals')
-  gui.add(obj, 'redraw').name('Redraw')
+gui.add(obj, 'drawOvals').name('Draw ovals').onFinishChange(() => {
+  addUrlParam('drawOvals', obj.drawOvals)
+})
+const seedWordInGui = gui
+  .add(obj, 'seedWord')
+  .name('Seed word')
+  .onFinishChange(() => {
+    seedPRNG(obj.seedWord)
+    addUrlParam('seedWord', obj.seedWord)
+  })
+gui.add(obj, 'redraw').name('Redraw')
+function randomSeed() {
+  let randomSeed = Math.random().toString(36).substring(7)
+  obj.seedWord = randomSeed
+  seedWordInGui.setValue(randomSeed)
+  seedWordInGui.updateDisplay()
+  seedPRNG(obj.seedWord)
+  addUrlParam('seedWord', obj.seedWord)
+  pInstance.redraw()
+}
+
+// gui.add(obj, 'redrawWithNewSeed').name('New seed')
+gui.add({ randomSeed }, 'randomSeed').name('New seed')
 gui.add(obj, 'saveSvg').name('Save SVG')
 
 const canvasOption = gui.addFolder('Canvas options')
@@ -146,6 +168,8 @@ const sketch = (p: p5SVG) => {
   }
 
   p.draw = () => {
+    seedPRNG(obj.seedWord)
+
     // clear the background
     p.clear()
 
@@ -220,9 +244,8 @@ const sketch = (p: p5SVG) => {
       // console.log('randomNum', randomNum)
 
       // if (randomNum > 0.95) {
-        // in the center of the rect, draw a circle
+      // in the center of the rect, draw a circle
       if (obj.drawOvals) {
-
         if (randomNum > obj.chanceOfJanky) {
           p.ellipse(0, 0, minDimension / dimensionOffset, minDimension / dimensionOffset)
         } else {
@@ -233,7 +256,7 @@ const sketch = (p: p5SVG) => {
             minDimension / dimensionOffset - random(0, 20)
           )
         }
-        }
+      }
 
       // }
 
@@ -288,8 +311,8 @@ const sketch = (p: p5SVG) => {
       // p.resetMatrix()
     })
 
-    console.clear()
-    console.log('grid', grid.areas)
+    // console.clear()
+    // console.log('grid', grid.areas)
   }
 }
 
