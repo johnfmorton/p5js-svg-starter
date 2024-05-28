@@ -174,7 +174,7 @@ const sketch = (p: p5SVG) => {
 
     // loop through the grid.areas
 
-    grid.areas.forEach(area => {
+    grid.areas.forEach((area: { x: number; y: number; width: number; height: number | undefined }) => {
       // set the color for this loop
       const color1 = p.random(colors)
       // set the stroke color
@@ -284,7 +284,7 @@ const sketch = (p: p5SVG) => {
 }
 
 // fill rect
-function filledRect(x, y, w, h, lineSpacing, centerFill = true) {
+function filledRect(x: number, y: number, w: number, h: number, lineSpacing: number, centerFill = true) {
   // Draw the boundary of the rectangle
   pInstance.stroke(0) // Set stroke color
   pInstance.noFill() // No fill for the boundary
@@ -306,7 +306,7 @@ function filledRect(x, y, w, h, lineSpacing, centerFill = true) {
 }
 
 // fill rect
-function jankyFilledRect(x, y, w, h, lineSpacing, centerFill = true) {
+function jankyFilledRect(x: number, y: number, w: number, h: number, lineSpacing: number, centerFill = true) {
   // Draw the boundary of the rectangle
   pInstance.stroke(0) // Set stroke color
   pInstance.noFill() // No fill for the boundary
@@ -330,7 +330,7 @@ function jankyFilledRect(x, y, w, h, lineSpacing, centerFill = true) {
   pInstance.pop() // Restore the drawing settings
 }
 
-function fillCircleConcentric(cx, cy, radius, lineSpacing, centerFill = true) {
+function fillCircleConcentric(cx: any, cy: any, radius: number, lineSpacing: number, centerFill = true) {
   // Draw the boundary of the circle
   pInstance.stroke(0) // Set stroke color
   pInstance.noFill() // No fill for the boundary
@@ -348,7 +348,7 @@ function fillCircleConcentric(cx, cy, radius, lineSpacing, centerFill = true) {
 }
 
 // fillCircle function using radial lines
-function fillCircleRadial(cx, cy, radius, lineSpacing, centerFill = true) {
+function fillCircleRadial(cx: number, cy: number, radius: number, lineSpacing: number, centerFill = true) {
   // Draw the boundary of the circle
   pInstance.stroke(0) // Set stroke color
   pInstance.noFill() // No fill for the boundary
@@ -372,7 +372,7 @@ function fillCircleRadial(cx, cy, radius, lineSpacing, centerFill = true) {
 }
 
 // fillEllipse function using horizontal lines
-function fillEllipse(cx, cy, width, height, lineSpacing) {
+function fillEllipse(cx: number, cy: number, width: number, height: number, lineSpacing: number) {
   // Draw the boundary of the ellipse
   pInstance.stroke(0) // Set stroke color
   pInstance.noFill() // No fill for the boundary
@@ -404,7 +404,7 @@ function fillEllipse(cx, cy, width, height, lineSpacing) {
 }
 
 // fillEllipse function using horizontal lines
-function jankyFillEllipse(cx, cy, width, height, lineSpacing) {
+function jankyFillEllipse(cx: number, cy: number, width: number, height: number, lineSpacing: number) {
   // Draw the boundary of the ellipse
   pInstance.stroke(0) // Set stroke color
   pInstance.noFill() // No fill for the boundary
