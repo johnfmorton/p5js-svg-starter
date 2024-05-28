@@ -3,10 +3,12 @@ import './src/css/input.css'
 // Import p5 module
 import p5 from 'p5'
 import init, { p5SVG } from 'p5.js-svg'
+
 import GUI from 'lil-gui'
 import { createQtGrid, randomBias, randomSnap, random } from '@georgedoescode/generative-utils'
 
 import { dialogController } from './src/dialog'
+import test from 'node:test'
 
 // Initialize dialog controller
 dialogController.init({
@@ -16,7 +18,9 @@ dialogController.init({
 
 init(p5)
 
-let pInstance
+let pInstance: p5SVG
+
+let myObj: object;
 
 // check URL params
 const urlParams = new URLSearchParams(window.location.search)
@@ -26,9 +30,12 @@ const obj = {
   title: 'Pen Plotter Experiment', // string
   drawRectLines: false, // checkbox
   redraw: () => pInstance.redraw(),
-  saveSvg: () => pInstance.save('sketch.svg'),
+  saveSvg: () => pInstance.save(`${obj.title}.svg`),
   resize: () => {
-    pInstance.reset()
+    pInstance.resizeCanvas(obj.width, obj.height)
+  },
+  test: () => {
+    console.log('test')
   },
   about: () => dialogController.open(),
   width: 1056,
@@ -106,6 +113,7 @@ gui
 gui.add(obj, 'saveSvg').name('Save SVG')
 gui.add(obj, 'redraw').name('Redraw')
 gui.add(obj, 'about').name('About')
+gui.add(obj, 'test').name('Test')
 const canvasOption = gui.addFolder('Canvas options')
 canvasOption.close()
 canvasOption.add(obj, 'title')
@@ -117,6 +125,8 @@ canvasOption.add(obj, 'resize').name('Reset Canvas')
 const sketch = (p: p5SVG) => {
   // Assign the sketch instance to the global variable
   pInstance = p
+
+
 
   // SVG is sized to be a full 8 1/2 x 11 inch document when opened in InkScape
 
@@ -134,13 +144,6 @@ const sketch = (p: p5SVG) => {
     p.createCanvas(getWidth(), getHeight(), p.SVG)
     // Don't loop the draw function
     p.noLoop()
-  }
-
-  // reset
-  p.reset = () => {
-    setPageTitle(obj.title)
-    p.resizeCanvas(getWidth(), getHeight())
-    // p.setup()
   }
 
   p.draw = () => {
