@@ -24,7 +24,7 @@ let pInstance: p5SVG
 
 const gui = new GUI().title('Sketch controls')
 const obj = {
-  title: 'Pen Plotter Experiment', // string
+  title: 'Pen Plotter Project', // string
   drawRectLines: false, // checkbox
   redraw: () => {
     setPageTitle(obj.title)
