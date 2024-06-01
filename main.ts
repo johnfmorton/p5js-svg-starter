@@ -20,6 +20,8 @@ init(p5)
 
 let pInstance: p5SVG
 
+
+
 const gui = new GUI().title('Sketch controls')
 // initialize the obj with the default values
 const obj = {
