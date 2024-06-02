@@ -24,10 +24,8 @@ const obj = {
   title: 'Pen Plotter Project', // string
   width: 1056, // number (8.5 x 11 inch document)
   height: 816, // number (8.5 x 11 inch document)
-  // sketch specific functions
+  // sketch specific functions to be added to GUI controls
   redraw: () => {
-    console.log('redraw in main')
-    // setPageTitle(obj.title)
     pInstance.redraw()
   },
   saveSvg: () => {
@@ -35,7 +33,6 @@ const obj = {
     pInstance.save(`${sanitizeFilename(obj.title)}_${timestamp}.svg`)
   },
   resize: () => {
-    console.log('resize in main')
     pInstance.resizeCanvas(obj.width, obj.height)
   },
   seedWord: 'helloWorld', // string
@@ -51,6 +48,7 @@ const obj = {
 }
 
 // Initialize the sketch by syncronizing the URL params with the sketch properties obj
+// This will also update the URL params if they are not in sync with the obj properties
 initUrlParams(obj)
 
 // Create the GUI, passing the obj and the p5 instance
@@ -93,6 +91,7 @@ const sketch = (p: p5SVG) => {
     const height = obj.height
 
     const inset = 25
+
     p.rect(0 + inset, 0 + inset, width - inset * 2, height - inset * 2)
 
     const insetWidth = width - inset * 2
@@ -107,15 +106,20 @@ const sketch = (p: p5SVG) => {
       return {
         x: randomBias(0, insetWidth, focus.x, 1),
         y: randomBias(0, insetHeight, focus.y, 1),
-        width: 2,
-        height: 2
+        width: 15,
+        height: 15
       }
     })
-
+    p.push()
     // Draw the points
+    // color the points
+    p.fill('#ff0000')
+    p.stroke('#00ff00')
+    p.strokeWeight(1)
     points.forEach(point => {
       p.ellipse(point.x + inset, point.y + inset, point.width, point.height)
     })
+    p.pop()
 
 
   }
