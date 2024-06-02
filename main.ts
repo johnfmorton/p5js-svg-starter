@@ -98,33 +98,33 @@ gui
   .name('Chance of janky')
   .step(0.01)
   .onFinishChange(() => {
-    //addUrlParam('chanceOfJanky', obj.chanceOfJanky)
+    addUrlParam('chanceOfJanky', obj.chanceOfJanky)
   })
 gui
   .add(obj, 'lineSpacingForCircles', 1, 10)
   .name('Circles line spacing')
   .step(1)
   .onFinishChange(() => {
-    //addUrlParam('lineSpacingForCircles', obj.lineSpacingForCircles)
+    addUrlParam('lineSpacingForCircles', obj.lineSpacingForCircles)
   })
 gui
   .add(obj, 'lineSpacingForSquares', 1, 10)
   .name('Squares line spacing')
   .step(1)
   .onFinishChange(() => {
-    //addUrlParam('lineSpacingForSquares', obj.lineSpacingForSquares)
+    addUrlParam('lineSpacingForSquares', obj.lineSpacingForSquares)
   })
 gui
   .add(obj, 'drawRectLines')
   .name('Draw the grid?')
   .onFinishChange(() => {
-    //addUrlParam('drawRectLines', obj.drawRectLines)
+    addUrlParam('drawRectLines', obj.drawRectLines)
   })
 gui
   .add(obj, 'centerTheRect')
   .name('Center the rectabgles?')
   .onFinishChange(() => {
-    //addUrlParam('centerTheRect', obj.centerTheRect)
+    addUrlParam('centerTheRect', obj.centerTheRect)
   })
 gui
   .add(obj, 'drawOvals')
@@ -161,8 +161,12 @@ canvasOption.add(obj, 'title').onFinishChange(() => {
   setPageTitle(obj.title)
   addUrlParam('title', obj.title)
 })
-canvasOption.add(obj, 'width')
-canvasOption.add(obj, 'height')
+canvasOption.add(obj, 'width').onFinishChange(() => {
+  addUrlParam('width', obj.width)
+});
+canvasOption.add(obj, 'height').onFinishChange(() => {
+  addUrlParam('height', obj.height)
+})
 canvasOption.add(obj, 'resize').name('Reset Canvas')
 
 // p5 sketch
