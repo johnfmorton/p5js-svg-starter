@@ -3,7 +3,7 @@ import './src/css/input.css'
 // Import p5 module
 import p5 from 'p5'
 import init, { p5SVG } from 'p5.js-svg'
-import { createQtGrid, randomBias, randomSnap, random, seedPRNG } from '@georgedoescode/generative-utils'
+import { createQtGrid, createVoronoiDiagram, randomBias, randomSnap, random, seedPRNG } from '@georgedoescode/generative-utils'
 import { dialogController } from './src/dialog'
 import { sanitizeFilename, initUrlParams, setPageTitle } from './src/utils'
 import { createGui } from './src/createGui';
@@ -121,6 +121,29 @@ const sketch = (p: p5SVG) => {
     })
     p.pop()
 
+    let voronoi = createVoronoiDiagram({
+      width: insetWidth,
+      height: insetHeight,
+      points: points,
+      relaxIterations: 3
+    })
+    // debugger;
+    voronoi.cells.forEach(cell => {
+      console.log(cell);
+      p.push()
+      p.noFill()
+      p.stroke('#0000ff')
+      p.strokeWeight(1)
+      p.ellipse(cell.centroid.x + inset, cell.centroid.y + inset, 10, 10)
+
+      // p.beginShape()
+      // cell.halfedges.forEach(halfedge => {
+      //   const v = halfedge.getStartpoint()
+      //   p.vertex(v.x + inset, v.y + inset)
+      // })
+      // p.endShape(p.CLOSE)
+      p.pop()
+    })
 
   }
 }
