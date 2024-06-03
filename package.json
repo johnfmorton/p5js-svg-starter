@@ -15,7 +15,7 @@
     "vite": "^5.2.0"
   },
   "dependencies": {
-    "@georgedoescode/generative-utils": "^1.0.38",
+    "@georgedoescode/generative-utils": "github:johnfmorton/generative-utils#johnfmorton-patch-for-points-in-path",
     "lil-gui": "^0.19.2",
     "p5": "^1.9.4",
     "p5.js-svg": "github:johnfmorton/p5.js-svg#main"
